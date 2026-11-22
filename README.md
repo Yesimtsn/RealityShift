@@ -1,6 +1,6 @@
 # RealityShift
 
-An adaptive AI reality lab for disinformation resilience.
+An adaptive AI reality lab for disinformation resilience (ENS 491/492, Sabancı University).
 
 AI agents share and gradually change a claim on a small social network. The system detects
 claim versions that have become false, corrects the agents who saw them, and an AI mentor
@@ -25,5 +25,6 @@ tests/          verification tests (pytest)
 
 ```
 python -m sim.agents      # step 1: prints the 20 agents
+python -m sim.network     # step 2: network summary + picture in outputs/
 pytest                    # runs the verification tests
 ```
