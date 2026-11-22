@@ -1,7 +1,8 @@
 """Step 6: detection and detection-triggered correction.
 
 Detector (Shu et al. knowledge-based, adapted to versions and rounds):
-    F_t(c) = 1[ D_hat_t(c) >= theta ],   D_hat_t(c) = (#R_hat + 0.5 #N_hat) / |A(c)|
+    F_t(c) = 1[ D_hat_t(c) >= theta  and  R_hat_t(c) >= 1 ]
+    D_hat_t(c) = (#R_hat + 0.5 #N_hat) / |A(c)|,  R_hat_t(c) = #R_hat (statements judged refuted)
 where the verdicts v_hat_t(a) come from a fact checker that may only use the
 evidence released by round t. The true D(c) is NOT used by the detector; it is
 the gold label for evaluation.
@@ -15,7 +16,7 @@ from it, gets the official correction once.
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set
 
-from .claims import FACTS, LAMBDA, Verdict
+from .claims import FACTS, LAMBDA, Verdict, is_false
 from .rules import rng
 from .simulate import THETA, Sim
 
@@ -50,11 +51,18 @@ class PlaceholderChecker:
         return v
 
 
-def estimated_deviation(version, checker, evidence_open, seed, t) -> float:
+def estimate(version, checker, evidence_open, seed, t):
+    """Returns (d_hat, r_hat): the estimated deviation and the number of
+    statements the checker judges refuted, using only released evidence."""
     vs = [checker.verdict(f, evidence_open, seed, t, key=i) for i, f in enumerate(version.facts)]
-    r = sum(v == Verdict.R for v in vs)
-    n = sum(v == Verdict.N for v in vs)
-    return (r + LAMBDA * n) / len(vs)
+    r_hat = sum(v == Verdict.R for v in vs)
+    n_hat = sum(v == Verdict.N for v in vs)
+    d_hat = (r_hat + LAMBDA * n_hat) / len(vs)
+    return d_hat, r_hat
+
+
+def estimated_deviation(version, checker, evidence_open, seed, t) -> float:
+    return estimate(version, checker, evidence_open, seed, t)[0]
 
 
 @dataclass
@@ -85,8 +93,8 @@ class Intervention:
         for vid, v in sim.tree.versions.items():
             if vid in self.flagged:
                 continue
-            d_hat = estimated_deviation(v, self.checker, sim.evidence_open, sim.seed, t)
-            if d_hat >= THETA:
+            d_hat, r_hat = estimate(v, self.checker, sim.evidence_open, sim.seed, t)
+            if d_hat >= THETA and r_hat >= 1:      # verifiably false, not just unsupported
                 self.flagged[vid] = t
                 sim.log(round=t, type="flagged", version=vid, d_hat=d_hat, d_true=v.deviation)
         if self.t_det is None and self.flagged:
@@ -107,7 +115,7 @@ class Intervention:
 
 def detection_scores(sim: Sim, flagged: Dict[str, int], t: int) -> dict:
     """Precision / recall of the flags so far against the gold labels D(c) >= theta."""
-    gold = {vid for vid, v in sim.tree.versions.items() if v.deviation >= THETA}
+    gold = {vid for vid, v in sim.tree.versions.items() if is_false(v.facts, THETA)}
     pred = set(flagged)
     tp = len(gold & pred)
     precision = tp / len(pred) if pred else None

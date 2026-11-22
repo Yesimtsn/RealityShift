@@ -15,11 +15,11 @@ from typing import Callable, Dict, List, Optional, Set
 import networkx as nx
 
 from .agents import Agent, State
-from .claims import FACTS, ROLE_EDITS, Verdict, VersionTree, make_child, seed_version
+from .claims import FACTS, ROLE_EDITS, Verdict, VersionTree, is_false, make_child, seed_version
 from .rules import STOCHASTIC, Action, Rules, choose_action, next_state, rng, sample
 from .textgen import TextGen
 
-THETA = 0.5  # a version is false if D >= THETA
+THETA = 0.5  # a version is false if D >= THETA and it has at least one refuted statement
 
 # Evidence released at the start (scenario records). Step 6 can release more.
 DEFAULT_EVIDENCE = {"ev_report"}
@@ -193,12 +193,12 @@ def record_round(sim: Sim, t: int, new_versions: int) -> None:
     n = len(agents)
     exposed = [a for a in agents.values() if a.memory.first_exposure_round is not None]
     saw_false = [a for a in agents.values()
-                 if any(tree.versions[v].deviation >= THETA for _, v in a.memory.received)]
+                 if any(is_false(tree.versions[v].facts, THETA) for _, v in a.memory.received)]
     counts = {s.value: sum(a.state == s for a in agents.values()) for s in State}
     sim.rounds.append({
         "round": t,
         "reach": len(exposed) / n,               # R(t): saw any version
-        "reach_false": len(saw_false) / n,       # saw a false version (D >= theta)
+        "reach_false": len(saw_false) / n,       # saw a false version (D >= theta, >= 1 refuted)
         **counts,
         "versions": len(tree),
         "new_versions": new_versions,

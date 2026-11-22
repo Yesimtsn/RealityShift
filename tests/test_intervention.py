@@ -66,3 +66,15 @@ def test_detection_recall_grows_as_evidence_is_released():
         sim, iv = paired(seed)["none"]
         recalls = [d["recall"] for d in iv.detections if d["recall"] is not None]
         assert recalls[-1] >= recalls[0]
+
+
+def test_detector_does_not_flag_without_evidence():
+    """Before the capacity / open-data evidence is out, 'nearly empty' and
+    'officials hide numbers' cannot be checked: D_hat = 0.5 but R_hat = 0 -> no flag."""
+    from sim.claims import Version
+    from sim.intervention import estimate
+    v = Version("x", None, "x", 0, 0, "seed", ("nearly_empty", "hide_numbers"), (), "en", "t", 1.0, False)
+    d_hat, r_hat = estimate(v, PlaceholderChecker(), {"ev_report"}, 0, 1)
+    assert d_hat == 0.5 and r_hat == 0
+    d_hat, r_hat = estimate(v, PlaceholderChecker(), {"ev_report", "ev_capacity"}, 0, 2)
+    assert d_hat == 0.75 and r_hat == 1

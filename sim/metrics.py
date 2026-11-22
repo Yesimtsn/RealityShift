@@ -3,6 +3,7 @@ from statistics import mean
 from typing import Optional
 
 from .agents import State
+from .claims import is_false
 from .simulate import THETA, Sim
 
 
@@ -25,7 +26,7 @@ def outcomes(sim: Sim, intervention=None) -> dict:
     if intervention is not None:
         for vid, t_flag in intervention.flagged.items():
             v = tree.versions[vid]
-            if v.deviation >= THETA:
+            if is_false(v.facts, THETA):
                 delays.append(t_flag - v.round)
 
     violations = [e for e in sim.events if e["type"] == "violation"] + tree.check()

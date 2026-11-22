@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from sim.claims import (Version, VersionTree, apply_edit, deviation, make_child,
+from sim.claims import (Version, VersionTree, apply_edit, deviation, is_false, make_child,
                         seed_version)
 from sim.textgen import TextGen
 
@@ -67,3 +67,10 @@ def test_turkish_text():
     tree.add(seed_version(author=0, lang="tr", text_gen=tg))
     c1 = make_child(tree, "c0", 1, 1, "exaggerate", False, g(), tg)
     assert c1.text.startswith("SON DAKİKA:")
+
+
+def test_unsupported_only_is_not_false():
+    # D = 0.5 but nothing is refuted -> unverified, not false (Shu: must be verifiable)
+    assert deviation(("cause_hotels",)) == 0.5
+    assert not is_false(("cause_hotels",))
+    assert is_false(("nearly_empty", "official_source"))      # D = 0.5 with one refuted fact

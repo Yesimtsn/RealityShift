@@ -81,6 +81,14 @@ def deviation(facts) -> float:
     return (r + LAMBDA * n) / len(facts)
 
 
+def is_false(facts, theta: float = 0.5) -> bool:
+    """Verifiably false: D >= theta AND at least one refuted statement.
+    A version with D >= theta but no refuted statement is 'unverified', not false
+    (Shu et al.: fake news must be verifiable as false)."""
+    facts = list(facts)
+    return deviation(facts) >= theta and any(FACTS[f].verdict == Verdict.R for f in facts)
+
+
 def apply_edit(phi: str, facts: Tuple[str, ...], style: Tuple[str, ...],
                g: np.random.Generator) -> Tuple[Tuple[str, ...], Tuple[str, ...]]:
     """The fact edit of T. Returns the child's (facts, style)."""
