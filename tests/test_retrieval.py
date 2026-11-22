@@ -41,8 +41,10 @@ def test_correct_supporting_source_tr():
 
 
 def test_refuting_source():
-    a = mentor_feedback(store, "The reservoir is nearly empty", "F2", "en", t=0)
-    assert a.verdict == "R" and a.citations[0].evidence_id == "E1"
+    # the capacity data (E7) are released in round 2, as in the simulation
+    assert mentor_feedback(store, "The reservoir is nearly empty", "F2", "en", t=1).verdict == "N"
+    a = mentor_feedback(store, "The reservoir is nearly empty", "F2", "en", t=2)
+    assert a.verdict == "R" and a.citations[0].evidence_id == "E7"
 
 
 # 3. Missing, not-yet-released and conflicting evidence
@@ -53,9 +55,9 @@ def test_missing_evidence_gives_insufficient():
 
 
 def test_evidence_not_released_yet():
-    # E3 (no city-wide cuts) is released in round 2: before that the mentor must abstain
-    assert mentor_feedback(store, "City-wide water cuts start next week", "F3", "en", t=1).verdict == "N"
-    assert mentor_feedback(store, "City-wide water cuts start next week", "F3", "en", t=2).verdict == "R"
+    # E3 (no city-wide cuts) is released in round 3: before that the mentor must abstain
+    assert mentor_feedback(store, "City-wide water cuts start next week", "F3", "en", t=2).verdict == "N"
+    assert mentor_feedback(store, "City-wide water cuts start next week", "F3", "en", t=3).verdict == "R"
 
 
 def test_conflicting_evidence_shows_both_sources():
@@ -112,7 +114,7 @@ def test_evaluation_and_cross_language_gap():
     # in round 1 the water-cut evidence is not released yet: those questions
     # leave hit@k and count as questions the mentor must abstain on
     r1 = evaluate(store, queries, t=1, k=3)
-    assert r1["EN-EN"]["n"] == 3 and r1["unanswerable"]["correct_abstention_rate"] == 1.0
+    assert r1["EN-EN"]["n"] == 1 and r1["unanswerable"]["correct_abstention_rate"] == 1.0
 
 
 # 7. Events and citations are logged

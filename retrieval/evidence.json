@@ -1,248 +1,328 @@
 {
- "_note": "Small reviewed bilingual evidence collection for the fictional Northtown reservoir scenario. All documents are scenario records written by the authors; none is a real-world source. relations = reviewed evidence-claim links (fact_id -> S supports / R refutes). F3 (city-wide cuts) and F6 (Harbour district cut) are separate facts with different scope; E3 and E6 give a genuine conflict on F3 (same date, same scope, different publishers). The scenario truth is fixed in the fact base (F3 is false): E6 is a reviewed record of a wrong newspaper report.",
- "facts": {
-  "F1": {
-   "en": "The reservoir level fell 12% this month.",
-   "tr": "Baraj doluluğu bu ay yüzde 12 düştü.",
-   "true": true
+  "_note": "Single reviewed bilingual evidence collection for the fictional Northtown reservoir scenario, shared by the retrieval evaluation and the simulation's detector. All documents are scenario records written by the authors; none is a real-world source. relations = reviewed evidence-claim links (fact_id -> S supports / R refutes). release_round and sim_id follow the simulation's release schedule (sim/intervention.py EVIDENCE_SCHEDULE); sim_facts maps the simulation's fact ids (sim/claims.py FACTS) to these facts. F4 (hotel district) and the mayor statement have no settling record. E5 (Harbour district cut) and E6 (a wrong newspaper report that conflicts with E3) are used only by the retrieval evaluation (sim_id null). F3 (city-wide cuts) and F6 (Harbour district cut) are separate facts.",
+  "facts": {
+    "F1": {
+      "en": "The reservoir level fell 12% this month.",
+      "tr": "Baraj doluluğu bu ay yüzde 12 düştü.",
+      "true": true
+    },
+    "F2": {
+      "en": "The reservoir is nearly empty.",
+      "tr": "Baraj neredeyse boş.",
+      "true": false
+    },
+    "F3": {
+      "en": "City-wide water cuts start next week.",
+      "tr": "Gelecek hafta şehir genelinde su kesintisi başlıyor.",
+      "true": false
+    },
+    "F4": {
+      "en": "The drop is caused by the new hotel district.",
+      "tr": "Düşüşün nedeni yeni otel bölgesi.",
+      "true": null
+    },
+    "F5": {
+      "en": "Officials are hiding the real numbers.",
+      "tr": "Yetkililer gerçek rakamları saklıyor.",
+      "true": false
+    },
+    "F6": {
+      "en": "A water cut is scheduled in the Harbour district next week.",
+      "tr": "Gelecek hafta Liman bölgesinde su kesintisi planlandı.",
+      "true": true
+    },
+    "F7": {
+      "en": "According to the Northtown Water Authority report.",
+      "tr": "Northtown Su İdaresi raporuna göre.",
+      "true": true
+    },
+    "F8": {
+      "en": "Drops like this are normal in the dry season.",
+      "tr": "Bu tür düşüşler kurak mevsimde olağan.",
+      "true": true
+    }
   },
-  "F2": {
-   "en": "The reservoir is nearly empty.",
-   "tr": "Baraj neredeyse boş.",
-   "true": false
-  },
-  "F3": {
-   "en": "City-wide water cuts start next week.",
-   "tr": "Gelecek hafta şehir genelinde su kesintisi başlıyor.",
-   "true": false
-  },
-  "F4": {
-   "en": "The drop is caused by the new hotel district.",
-   "tr": "Düşüşün nedeni yeni otel bölgesi.",
-   "true": false
-  },
-  "F5": {
-   "en": "Officials are hiding the real numbers.",
-   "tr": "Yetkililer gerçek rakamları saklıyor.",
-   "true": false
-  },
-  "F6": {
-   "en": "A water cut is scheduled in the Harbour district next week.",
-   "tr": "Gelecek hafta Liman bölgesinde su kesintisi planlandı.",
-   "true": true
+  "evidence": [
+    {
+      "evidence_id": "E1",
+      "type": "scenario_record",
+      "publisher": "Northtown Water Authority",
+      "title": "Monthly reservoir report, October",
+      "pub_date": "2026-10-31",
+      "lang": "en",
+      "release_round": 0,
+      "reviewer": "YT+HSK",
+      "text": "Monthly report of the Northtown Water Authority: the reservoir level fell 12% this month.",
+      "relations": {
+        "F1": "S",
+        "F7": "S"
+      },
+      "sim_id": "ev_report"
+    },
+    {
+      "evidence_id": "E2",
+      "type": "scenario_record",
+      "publisher": "Northtown Su İdaresi",
+      "title": "Aylık baraj raporu, Ekim",
+      "pub_date": "2026-10-31",
+      "lang": "tr",
+      "release_round": 0,
+      "reviewer": "YT+HSK",
+      "text": "Northtown Su İdaresi aylık raporu: baraj doluluğu bu ay yüzde 12 düştü.",
+      "relations": {
+        "F1": "S",
+        "F7": "S"
+      },
+      "sim_id": "ev_report"
+    },
+    {
+      "evidence_id": "E3",
+      "type": "scenario_record",
+      "publisher": "Northtown Water Authority",
+      "title": "Press statement on water supply",
+      "pub_date": "2026-11-03",
+      "lang": "en",
+      "release_round": 3,
+      "reviewer": "YT+HSK",
+      "text": "No city-wide water cuts are planned for next week.",
+      "relations": {
+        "F3": "R"
+      },
+      "sim_id": "ev_no_cuts"
+    },
+    {
+      "evidence_id": "E4",
+      "type": "scenario_record",
+      "publisher": "Northtown Su İdaresi",
+      "title": "Su arzı hakkında basın açıklaması",
+      "pub_date": "2026-11-03",
+      "lang": "tr",
+      "release_round": 3,
+      "reviewer": "YT+HSK",
+      "text": "Gelecek hafta şehir genelinde su kesintisi planlanmıyor.",
+      "relations": {
+        "F3": "R"
+      },
+      "sim_id": "ev_no_cuts"
+    },
+    {
+      "evidence_id": "E5",
+      "type": "scenario_record",
+      "publisher": "Northtown Municipality, Harbour District",
+      "title": "Maintenance notice",
+      "pub_date": "2026-11-05",
+      "lang": "en",
+      "release_round": 4,
+      "reviewer": "YT+HSK",
+      "text": "A scheduled water cut will take place in the Harbour district next Tuesday for pipe maintenance.",
+      "relations": {
+        "F6": "S"
+      },
+      "sim_id": null
+    },
+    {
+      "evidence_id": "E6",
+      "type": "scenario_record",
+      "publisher": "Northtown Daily",
+      "title": "News report on water supply",
+      "pub_date": "2026-11-03",
+      "lang": "en",
+      "release_round": 4,
+      "reviewer": "YT+HSK",
+      "text": "City officials told the newspaper that city-wide water cuts will start next week because rainfall stayed low.",
+      "relations": {
+        "F3": "S"
+      },
+      "sim_id": null
+    },
+    {
+      "evidence_id": "E7",
+      "type": "scenario_record",
+      "publisher": "Northtown Water Authority",
+      "title": "Reservoir capacity data",
+      "pub_date": "2026-11-02",
+      "lang": "en",
+      "release_round": 2,
+      "reviewer": "YT+HSK",
+      "text": "Capacity data: the reservoir is at 58% of capacity, far from empty. Drops like this are normal in the dry season.",
+      "relations": {
+        "F2": "R",
+        "F8": "S"
+      },
+      "sim_id": "ev_capacity"
+    },
+    {
+      "evidence_id": "E8",
+      "type": "scenario_record",
+      "publisher": "Northtown Su İdaresi",
+      "title": "Baraj kapasite verisi",
+      "pub_date": "2026-11-02",
+      "lang": "tr",
+      "release_round": 2,
+      "reviewer": "YT+HSK",
+      "text": "Kapasite verisi: baraj kapasitesinin yüzde 58'inde, boş olmaktan çok uzak. Bu tür düşüşler kurak mevsimde olağan.",
+      "relations": {
+        "F2": "R",
+        "F8": "S"
+      },
+      "sim_id": "ev_capacity"
+    },
+    {
+      "evidence_id": "E9",
+      "type": "scenario_record",
+      "publisher": "Northtown Water Authority",
+      "title": "Open reservoir data",
+      "pub_date": "2026-11-04",
+      "lang": "en",
+      "release_round": 4,
+      "reviewer": "YT+HSK",
+      "text": "The raw daily reservoir data are published openly on the authority website, so the real numbers are public.",
+      "relations": {
+        "F5": "R"
+      },
+      "sim_id": "ev_open_data"
+    },
+    {
+      "evidence_id": "E10",
+      "type": "scenario_record",
+      "publisher": "Northtown Su İdaresi",
+      "title": "Açık baraj verisi",
+      "pub_date": "2026-11-04",
+      "lang": "tr",
+      "release_round": 4,
+      "reviewer": "YT+HSK",
+      "text": "Ham günlük baraj verileri idarenin internet sitesinde açıkça yayımlanıyor; gerçek rakamlar herkese açık.",
+      "relations": {
+        "F5": "R"
+      },
+      "sim_id": "ev_open_data"
+    }
+  ],
+  "queries": [
+    {
+      "id": "q1",
+      "setting": "EN-EN",
+      "lang": "en",
+      "text": "Did the reservoir level fall 12% this month?",
+      "gold": [
+        "E1"
+      ],
+      "fact": "F1"
+    },
+    {
+      "id": "q2",
+      "setting": "EN-EN",
+      "lang": "en",
+      "text": "Is the reservoir nearly empty?",
+      "gold": [
+        "E7"
+      ],
+      "fact": "F2"
+    },
+    {
+      "id": "q3",
+      "setting": "EN-EN",
+      "lang": "en",
+      "text": "Are city-wide water cuts planned for next week?",
+      "gold": [
+        "E3",
+        "E6"
+      ],
+      "fact": "F3"
+    },
+    {
+      "id": "q4",
+      "setting": "EN-EN",
+      "lang": "en",
+      "text": "Is the drop caused by the new hotel district?",
+      "gold": [],
+      "fact": "F4"
+    },
+    {
+      "id": "q5",
+      "setting": "EN-EN",
+      "lang": "en",
+      "text": "Are officials hiding the real reservoir numbers?",
+      "gold": [
+        "E9"
+      ],
+      "fact": "F5"
+    },
+    {
+      "id": "q6",
+      "setting": "TR-TR",
+      "lang": "tr",
+      "text": "Baraj doluluğu bu ay yüzde 12 mi düştü?",
+      "gold": [
+        "E2"
+      ],
+      "fact": "F1"
+    },
+    {
+      "id": "q7",
+      "setting": "TR-TR",
+      "lang": "tr",
+      "text": "Baraj neredeyse boş mu?",
+      "gold": [
+        "E8"
+      ],
+      "fact": "F2"
+    },
+    {
+      "id": "q8",
+      "setting": "TR-TR",
+      "lang": "tr",
+      "text": "Gelecek hafta şehir genelinde su kesintisi var mı?",
+      "gold": [
+        "E4"
+      ],
+      "fact": "F3"
+    },
+    {
+      "id": "q9",
+      "setting": "TR-TR",
+      "lang": "tr",
+      "text": "Düşüşün nedeni yeni otel bölgesi mi?",
+      "gold": [],
+      "fact": "F4"
+    },
+    {
+      "id": "q10",
+      "setting": "TR-TR",
+      "lang": "tr",
+      "text": "Yetkililer gerçek rakamları saklıyor mu?",
+      "gold": [
+        "E10"
+      ],
+      "fact": "F5"
+    },
+    {
+      "id": "q11",
+      "setting": "TR-EN",
+      "lang": "tr",
+      "text": "Liman bölgesinde salı günü bakım için su kesintisi olacak mı?",
+      "gold": [
+        "E5"
+      ],
+      "fact": "F6"
+    },
+    {
+      "id": "q12",
+      "setting": "unsupported",
+      "lang": "en",
+      "text": "Did the mayor resign?",
+      "gold": [],
+      "fact": null
+    }
+  ],
+  "sim_facts": {
+    "drop12": "F1",
+    "nearly_empty": "F2",
+    "cuts_next_week": "F3",
+    "cause_hotels": "F4",
+    "hide_numbers": "F5",
+    "official_source": "F7",
+    "seasonal": "F8",
+    "mayor_resigned": null
   }
- },
- "evidence": [
-  {
-   "evidence_id": "E1",
-   "type": "scenario_record",
-   "publisher": "Northtown Water Authority",
-   "title": "Monthly reservoir report, October",
-   "pub_date": "2026-10-31",
-   "lang": "en",
-   "release_round": 0,
-   "reviewer": "YT+HSK",
-   "text": "The reservoir level fell 12% this month and the reservoir is now at 58% of capacity. The main cause of the drop is low rainfall; demand from new districts, including the hotel district, is not a significant factor.",
-   "relations": {
-    "F1": "S",
-    "F2": "R",
-    "F4": "R"
-   }
-  },
-  {
-   "evidence_id": "E2",
-   "type": "scenario_record",
-   "publisher": "Northtown Su İdaresi",
-   "title": "Aylık baraj raporu, Ekim",
-   "pub_date": "2026-10-31",
-   "lang": "tr",
-   "release_round": 0,
-   "reviewer": "YT+HSK",
-   "text": "Baraj doluluğu bu ay yüzde 12 düştü ve baraj şu anda kapasitesinin yüzde 58'inde. Düşüşün ana nedeni az yağış; otel bölgesi dahil yeni bölgelerin talebi önemli bir etken değil.",
-   "relations": {
-    "F1": "S",
-    "F2": "R",
-    "F4": "R"
-   }
-  },
-  {
-   "evidence_id": "E3",
-   "type": "scenario_record",
-   "publisher": "Northtown Water Authority",
-   "title": "Press statement on water supply",
-   "pub_date": "2026-11-03",
-   "lang": "en",
-   "release_round": 2,
-   "reviewer": "YT+HSK",
-   "text": "No city-wide water cuts are planned for next week. The real reservoir numbers are published every week on the authority website.",
-   "relations": {
-    "F3": "R",
-    "F5": "R"
-   }
-  },
-  {
-   "evidence_id": "E4",
-   "type": "scenario_record",
-   "publisher": "Northtown Su İdaresi",
-   "title": "Su arzı hakkında basın açıklaması",
-   "pub_date": "2026-11-03",
-   "lang": "tr",
-   "release_round": 2,
-   "reviewer": "YT+HSK",
-   "text": "Gelecek hafta şehir genelinde su kesintisi planlanmıyor. Gerçek baraj rakamları her hafta idarenin internet sitesinde yayımlanıyor.",
-   "relations": {
-    "F3": "R",
-    "F5": "R"
-   }
-  },
-  {
-   "evidence_id": "E5",
-   "type": "scenario_record",
-   "publisher": "Northtown Municipality, Harbour District",
-   "title": "Maintenance notice",
-   "pub_date": "2026-11-05",
-   "lang": "en",
-   "release_round": 4,
-   "reviewer": "YT+HSK",
-   "text": "A scheduled water cut will take place in the Harbour district next Tuesday for pipe maintenance.",
-   "relations": {
-    "F6": "S"
-   }
-  },
-  {
-   "evidence_id": "E6",
-   "type": "scenario_record",
-   "publisher": "Northtown Daily",
-   "title": "News report on water supply",
-   "pub_date": "2026-11-03",
-   "lang": "en",
-   "release_round": 4,
-   "reviewer": "YT+HSK",
-   "text": "City officials told the newspaper that city-wide water cuts will start next week because rainfall stayed low.",
-   "relations": {
-    "F3": "S"
-   }
-  }
- ],
- "queries": [
-  {
-   "id": "q1",
-   "setting": "EN-EN",
-   "lang": "en",
-   "text": "Did the reservoir level fall 12% this month?",
-   "gold": [
-    "E1"
-   ],
-   "fact": "F1"
-  },
-  {
-   "id": "q2",
-   "setting": "EN-EN",
-   "lang": "en",
-   "text": "Is the reservoir nearly empty?",
-   "gold": [
-    "E1"
-   ],
-   "fact": "F2"
-  },
-  {
-   "id": "q3",
-   "setting": "EN-EN",
-   "lang": "en",
-   "text": "Are city-wide water cuts planned for next week?",
-   "gold": [
-    "E3",
-    "E6"
-   ],
-   "fact": "F3"
-  },
-  {
-   "id": "q4",
-   "setting": "EN-EN",
-   "lang": "en",
-   "text": "Is the drop caused by the new hotel district?",
-   "gold": [
-    "E1"
-   ],
-   "fact": "F4"
-  },
-  {
-   "id": "q5",
-   "setting": "EN-EN",
-   "lang": "en",
-   "text": "Are officials hiding the real reservoir numbers?",
-   "gold": [
-    "E3"
-   ],
-   "fact": "F5"
-  },
-  {
-   "id": "q6",
-   "setting": "TR-TR",
-   "lang": "tr",
-   "text": "Baraj doluluğu bu ay yüzde 12 mi düştü?",
-   "gold": [
-    "E2"
-   ],
-   "fact": "F1"
-  },
-  {
-   "id": "q7",
-   "setting": "TR-TR",
-   "lang": "tr",
-   "text": "Baraj neredeyse boş mu?",
-   "gold": [
-    "E2"
-   ],
-   "fact": "F2"
-  },
-  {
-   "id": "q8",
-   "setting": "TR-TR",
-   "lang": "tr",
-   "text": "Gelecek hafta şehir genelinde su kesintisi var mı?",
-   "gold": [
-    "E4"
-   ],
-   "fact": "F3"
-  },
-  {
-   "id": "q9",
-   "setting": "TR-TR",
-   "lang": "tr",
-   "text": "Düşüşün nedeni yeni otel bölgesi mi?",
-   "gold": [
-    "E2"
-   ],
-   "fact": "F4"
-  },
-  {
-   "id": "q10",
-   "setting": "TR-TR",
-   "lang": "tr",
-   "text": "Yetkililer gerçek rakamları saklıyor mu?",
-   "gold": [
-    "E4"
-   ],
-   "fact": "F5"
-  },
-  {
-   "id": "q11",
-   "setting": "TR-EN",
-   "lang": "tr",
-   "text": "Liman bölgesinde salı günü bakım için su kesintisi olacak mı?",
-   "gold": [
-    "E5"
-   ],
-   "fact": "F6"
-  },
-  {
-   "id": "q12",
-   "setting": "unsupported",
-   "lang": "en",
-   "text": "Did the mayor resign?",
-   "gold": [],
-   "fact": null
-  }
- ]
 }

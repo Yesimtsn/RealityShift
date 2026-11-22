@@ -19,6 +19,8 @@ pip install -r requirements.txt
 ```
 sim/            simulation (agents, network, rules, claims, rounds, intervention, logs)
 retrieval/      evidence retrieval (BM25), verdicts, mentor feedback with citations, retrieval evaluation
+                retrieval/sim_checker.py: RetrievalChecker, drop-in for the detector's PlaceholderChecker
+                (Intervention(cond, checker=RetrievalChecker()))
 tests/          verification tests (pytest)
 ```
 

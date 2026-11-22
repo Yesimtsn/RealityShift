@@ -74,6 +74,7 @@ class EvidenceItem:
     relations: dict = field(default_factory=dict)   # fact_id -> "S" | "R" (reviewed)
     url: str = ""             # real references only
     access_date: str = ""     # real references only
+    sim_id: str | None = None # id in the simulation's release schedule (None: evaluation only)
 
     def cite(self) -> str:
         tag = "scenario record" if self.type == "scenario_record" else "reference"
@@ -103,6 +104,11 @@ def load_data(path: Path = DATA):
     raw = json.loads(path.read_text(encoding="utf-8"))
     store = EvidenceStore([EvidenceItem(**d) for d in raw["evidence"]])
     return store, raw["facts"], raw["queries"]
+
+
+def load_sim_facts(path: Path = DATA) -> dict:
+    """Simulation fact id -> fact id of this collection (None: no fact here)."""
+    return json.loads(path.read_text(encoding="utf-8"))["sim_facts"]
 
 
 # --------------------------------------------------------------------------
@@ -282,10 +288,10 @@ if __name__ == "__main__":
     print(json.dumps(res, indent=2))
     for f_id, st, lang, t in [("F1", "The reservoir level fell 12% this month", "en", 0),
                               ("F1", "Baraj doluluğu bu ay yüzde 12 düştü", "tr", 0),
-                              ("F2", "The reservoir is nearly empty", "en", 0),
+                              ("F2", "The reservoir is nearly empty", "en", 2),
                               (None, "The mayor resigned", "en", 10),
-                              ("F3", "City-wide water cuts start next week", "en", 1),
                               ("F3", "City-wide water cuts start next week", "en", 2),
+                              ("F3", "City-wide water cuts start next week", "en", 3),
                               ("F3", "City-wide water cuts start next week", "en", 4),
                               ("F6", "A water cut is scheduled in the Harbour district next week", "en", 4)]:
         a = mentor_feedback(store, st, f_id, lang, t=t)
