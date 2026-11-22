@@ -22,6 +22,7 @@ from sim.metrics import outcomes
 from sim.network import build
 from sim.simulate import run
 from sim.textgen import OllamaText, TextGen
+from retrieval.sim_checker import RetrievalChecker
 
 CONDITIONS = ("early", "late", "none")
 OUT = "outputs"
@@ -51,7 +52,7 @@ def main():
                 tg = TextGen(OllamaText(), record_path=f"{OUT}/texts_{args.lang}.json")
             else:
                 tg = TextGen()
-            iv = Intervention(cond)
+            iv = Intervention(cond, checker=RetrievalChecker())
             sim = run(G, agents, start, seed=seed, T=args.rounds, lang=args.lang,
                       intervene=iv, text_gen=tg)
             if args.llm:
@@ -104,7 +105,7 @@ def main():
         ex = detected[0]
         G, agents, start = build(ex)
         for cond in CONDITIONS:
-            iv = Intervention(cond)
+            iv = Intervention(cond, checker=RetrievalChecker())
             sim = run(G, agents, start, seed=ex, T=args.rounds, lang=args.lang, intervene=iv)
             save_run(sim, f"{OUT}/runs/seed{ex}_{cond}",
                      {"seed": ex, "condition": cond, "rounds": args.rounds, "lang": args.lang,
@@ -132,7 +133,7 @@ def plot(curves, summary, T):
     ax[1].set_xlabel("round")
     ax[1].set_ylabel("detector recall")
     ax[1].set_ylim(0, 1.05)
-    ax[1].set_title("Detector recall per round (placeholder checker, None runs)")
+    ax[1].set_title("Detector recall per round (retrieval checker, None runs)")
     for a in ax:
         a.grid(alpha=0.3)
     plt.tight_layout()
