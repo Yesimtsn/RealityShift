@@ -18,6 +18,7 @@ pip install -r requirements.txt
 
 ```
 sim/            simulation (agents, network, rules, claims, rounds, intervention, logs)
+retrieval/      evidence retrieval (BM25), verdicts, mentor feedback with citations, retrieval evaluation
 tests/          verification tests (pytest)
 ```
 
@@ -26,5 +27,6 @@ tests/          verification tests (pytest)
 ```
 python -m sim.agents      # step 1: prints the 20 agents
 python -m sim.network     # step 2: network summary + picture in outputs/
+python -m retrieval.rs_retrieval   # retrieval evaluation + mentor examples, writes retrieval/outputs/
 pytest                    # runs the verification tests
 ```
